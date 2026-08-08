@@ -62,23 +62,25 @@ export default function DashboardPage() {
         siteCount = 0;
       }
 
-      // Fetch customer count (if table exists, otherwise 0)
+      // Fetch customer count from customers table
       let customerCount = 0;
       try {
         const { count } = await supabase
           .from("customers")
-          .select("*", { count: "exact", head: true });
+          .select("id", { count: "exact", head: true })
+          .eq("type", "customer");
         customerCount = count ?? 0;
       } catch {
         customerCount = 0;
       }
 
-      // Fetch broker count (if table exists, otherwise 0)
+      // Fetch broker count from customers table
       let brokerCount = 0;
       try {
         const { count } = await supabase
-          .from("brokers")
-          .select("*", { count: "exact", head: true });
+          .from("customers")
+          .select("id", { count: "exact", head: true })
+          .eq("type", "broker");
         brokerCount = count ?? 0;
       } catch {
         brokerCount = 0;

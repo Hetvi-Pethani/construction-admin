@@ -11,7 +11,7 @@ export async function getAllCustomers(search?: string) {
 
   if (search?.trim()) {
     const q = `%${search.trim()}%`;
-    query = query.or(`name.ilike.${q},mobile.ilike.${q},type.ilike.${q}`);
+    query = query.or(`name.ilike.${q},mobile.ilike.${q},type.ilike.${q},site_name.ilike.${q}`);
   }
 
   const { data, error } = await query;
@@ -20,10 +20,10 @@ export async function getAllCustomers(search?: string) {
 }
 
 /**
- * Create a new customer/broker.
+ * Create a new customer/broker/investor.
  */
-export async function createCustomer(data: { name: string; mobile: string; type: string }) {
-  const { name, mobile, type } = data;
+export async function createCustomer(data: { name: string; mobile: string; type: string; site_name?: string }) {
+  const { name, mobile, type, site_name } = data;
 
   if (!name || !mobile || !type) {
     throw new Error("name, mobile, and type are required");
@@ -45,7 +45,7 @@ export async function createCustomer(data: { name: string; mobile: string; type:
 
   const { data: customerData, error } = await supabaseAdmin
     .from("customers")
-    .insert([{ name, mobile, type }])
+    .insert([{ name, mobile, type, site_name: site_name || null }])
     .select()
     .single();
 
@@ -54,9 +54,9 @@ export async function createCustomer(data: { name: string; mobile: string; type:
 }
 
 /**
- * Update an existing customer/broker.
+ * Update an existing customer/broker/investor.
  */
-export async function updateCustomer(id: string, updateData: { name?: string; mobile?: string; type?: string }) {
+export async function updateCustomer(id: string, updateData: { name?: string; mobile?: string; type?: string; site_name?: string }) {
   if (!id) throw new Error("Customer id is required");
 
   if (updateData.mobile) {
@@ -87,7 +87,7 @@ export async function updateCustomer(id: string, updateData: { name?: string; mo
 }
 
 /**
- * Delete a customer/broker.
+ * Delete a customer/broker/investor.
  */
 export async function deleteCustomer(id: string) {
   if (!id) throw new Error("Customer id is required");

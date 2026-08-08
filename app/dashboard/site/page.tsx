@@ -131,26 +131,25 @@ export default function SitesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6 md:p-8 font-sans">
-      
-      <div className="flex items-center justify-between gap-4 w-full mb-5">
-        {/* ===== SEARCH - START ===== */}
-        <div className="flex items-center gap-2 w-full max-w-md">
-          <div className="relative w-full">
-            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search site by name..."
-              className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-700 placeholder-slate-400 outline-none focus:border-teal-300 focus:ring-2 focus:ring-teal-100 transition-all"
-            />
-          </div>
+    <div className="min-h-screen bg-slate-50 p-4 sm:p-6 md:p-8 font-sans">
+
+      {/* Header: Search + Add Button */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 w-full mb-5">
+        {/* Search */}
+        <div className="relative w-full sm:max-w-md">
+          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search site by name..."
+            className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-700 placeholder-slate-400 outline-none focus:border-teal-300 focus:ring-2 focus:ring-teal-100 transition-all shadow-sm"
+          />
         </div>
 
-        {/* ===== ADD SITE - END ===== */}
+        {/* Add Site Button */}
         <button
           onClick={openCreate}
-          className="shrink-0 flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold shadow-sm shadow-indigo-200 transition-all duration-200 cursor-pointer"
+          className="shrink-0 flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold shadow-sm shadow-indigo-200 transition-all duration-200 cursor-pointer w-full sm:w-auto"
         >
           <Plus size={18} /> Add Site
         </button>
@@ -169,85 +168,163 @@ export default function SitesPage() {
             <p className="text-slate-400 mt-3 text-sm">No sites found</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/50">
-                  {["Site Name", "Created", "Actions"].map((h) => (
-                    <th
-                      key={h}
-                      className="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap"
-                    >
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {sites.map((s) => (
-                  <tr
-                    key={s.id}
-                    className="border-b border-slate-50 hover:bg-slate-50/60 transition-colors"
-                  >
-                    {/* Name */}
-                    <td className="px-5 py-3.5 whitespace-nowrap">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 font-bold text-sm shrink-0">
-                          <MapPin size={16} />
-                        </div>
-                        <span className="text-sm font-medium text-slate-700">
-                          {s.name || "—"}
-                        </span>
-                      </div>
-                    </td>
-
-                    {/* Created */}
-                    <td className="px-5 py-3.5 text-sm text-slate-400 whitespace-nowrap">
-                      {new Date(s.created_at).toLocaleDateString("en-IN", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </td>
-
-                    {/* Actions */}
-                    <td className="px-5 py-3.5">
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => openEdit(s)}
-                          title="Edit"
-                          className="w-8 h-8 rounded-lg border border-slate-200 bg-white hover:bg-blue-50 hover:border-blue-200 flex items-center justify-center transition-all cursor-pointer"
-                        >
-                          <Edit2 size={14} className="text-blue-500" />
-                        </button>
-                        <button
-                          onClick={() => setDeleteConfirm(s)}
-                          title="Delete"
-                          className="w-8 h-8 rounded-lg border border-slate-200 bg-white hover:bg-red-50 hover:border-red-200 flex items-center justify-center transition-all cursor-pointer"
-                        >
-                          <Trash2 size={14} className="text-red-400" />
-                        </button>
-                      </div>
-                    </td>
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-slate-100 bg-slate-50/50">
+                    {["Site Name", "Created", "Actions"].map((h) => (
+                      <th
+                        key={h}
+                        className="px-5 py-3.5 text-left text-[11px] font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap"
+                      >
+                        {h}
+                      </th>
+                    ))}
                   </tr>
+                </thead>
+                <tbody>
+                  {sites.map((s) => (
+                    <tr
+                      key={s.id}
+                      className="border-b border-slate-50 hover:bg-slate-50/60 transition-colors"
+                    >
+                      {/* Name */}
+                      <td className="px-5 py-3.5 whitespace-nowrap">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-lg bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 font-bold text-sm shrink-0">
+                            <MapPin size={16} />
+                          </div>
+                          <span className="text-sm font-medium text-slate-700">
+                            {s.name || "—"}
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Created */}
+                      <td className="px-5 py-3.5 text-sm text-slate-400 whitespace-nowrap">
+                        {new Date(s.created_at).toLocaleDateString("en-IN", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </td>
+
+                      {/* Actions */}
+                      <td className="px-5 py-3.5">
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => openEdit(s)}
+                            title="Edit"
+                            className="w-8 h-8 rounded-lg border border-slate-200 bg-white hover:bg-blue-50 hover:border-blue-200 flex items-center justify-center transition-all cursor-pointer"
+                          >
+                            <Edit2 size={14} className="text-blue-500" />
+                          </button>
+                          <button
+                            onClick={() => setDeleteConfirm(s)}
+                            title="Delete"
+                            className="w-8 h-8 rounded-lg border border-slate-200 bg-white hover:bg-red-50 hover:border-red-200 flex items-center justify-center transition-all cursor-pointer"
+                          >
+                            <Trash2 size={14} className="text-red-400" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="block md:hidden">
+              <div className="divide-y divide-slate-100">
+                {sites.map((s) => (
+                  <div key={s.id} className="p-4 hover:bg-slate-50 transition-colors">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 font-bold text-base shrink-0">
+                          <MapPin size={18} />
+                        </div>
+                        <div>
+                          <h3 className="text-base font-semibold text-slate-800">{s.name || "—"}</h3>
+                          <p className="text-xs text-slate-400 mt-0.5">
+                            {new Date(s.created_at).toLocaleDateString("en-IN", {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-1.5 w-auto ml-auto">
+                      {/* Edit */}
+                      <button
+                        onClick={() => openEdit(s)}
+                        className="
+      w-8 h-8
+      rounded-lg
+      border border-slate-200
+      bg-white
+      hover:bg-blue-50
+      text-slate-500
+      hover:text-blue-600
+      hover:border-blue-200
+      flex items-center justify-center
+      transition-all
+      shadow-sm
+    "
+                        title="Edit"
+                      >
+                        <Edit2 size={14} />
+                      </button>
+
+                      {/* Delete */}
+                      <button
+                        onClick={() => setDeleteConfirm(s)}
+                        className="
+      w-8 h-8
+      rounded-lg
+      border border-slate-200
+      bg-white
+      hover:bg-red-50
+      text-slate-500
+      hover:text-red-600
+      hover:border-red-200
+      flex items-center justify-center
+      transition-all
+      shadow-sm
+    "
+                        title="Delete"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </div>
+            </div>
+          </>
         )}
       </div>
 
       {/* ========== CREATE / EDIT MODAL ========== */}
       {modalOpen && (
-        <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[1000] flex items-end md:items-center justify-center">
           <div
             className="absolute inset-0 bg-slate-900/30 backdrop-blur-sm"
             onClick={() => setModalOpen(false)}
           />
 
-          <div className="relative w-full max-w-md bg-white rounded-2xl border border-slate-200 shadow-2xl p-7 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-slate-800">
+          {/* Modal — bottom sheet on mobile, centered on desktop */}
+          <div className="relative w-full md:max-w-md bg-white rounded-t-3xl md:rounded-2xl border border-slate-200 shadow-2xl p-5 sm:p-7 max-h-[92vh] md:max-h-[90vh] overflow-y-auto md:mx-4">
+            {/* Mobile drag handle */}
+            <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto mb-4 md:hidden" />
+
+            <div className="flex items-center justify-between mb-5 sm:mb-6">
+              <h2 className="text-base sm:text-lg font-bold text-slate-800">
                 {editingSite ? "Edit Site" : "Add New Site"}
               </h2>
               <button
@@ -302,13 +379,16 @@ export default function SitesPage() {
 
       {/* ========== DELETE CONFIRMATION MODAL ========== */}
       {deleteConfirm && (
-        <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[1000] flex items-end md:items-center justify-center">
           <div
             className="absolute inset-0 bg-slate-900/30 backdrop-blur-sm"
             onClick={() => setDeleteConfirm(null)}
           />
 
-          <div className="relative w-full max-w-sm bg-white rounded-2xl border border-slate-200 shadow-2xl p-7 text-center">
+          <div className="relative w-full md:max-w-sm bg-white rounded-t-3xl md:rounded-2xl border border-slate-200 shadow-2xl p-5 sm:p-7 text-center md:mx-4">
+            {/* Mobile drag handle */}
+            <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto mb-4 md:hidden" />
+
             <div className="w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center mx-auto mb-4">
               <Trash2 size={26} className="text-red-500" />
             </div>

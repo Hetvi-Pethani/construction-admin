@@ -14,7 +14,7 @@ export default function DashboardLayout({
     <div className="flex min-h-screen bg-slate-50">
       <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
       <main
-        className={`flex-1 transition-all duration-300 ease-in-out overflow-auto`}
+        className={`flex-1 transition-all duration-300 ease-in-out overflow-auto pb-20 md:pb-0`}
       >
         {children}
       </main>
