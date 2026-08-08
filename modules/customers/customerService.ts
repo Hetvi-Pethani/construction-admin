@@ -1,9 +1,10 @@
-import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 
 /**
  * Fetch all customers. Supports optional search query.
  */
 export async function getAllCustomers(search?: string) {
+  const supabaseAdmin = getSupabaseAdmin();
   let query = supabaseAdmin
     .from("customers")
     .select("*")
@@ -29,6 +30,8 @@ export async function createCustomer(data: { name: string; mobile: string; type:
     throw new Error("name, mobile, and type are required");
   }
 
+  const supabaseAdmin = getSupabaseAdmin();
+
   // Check if mobile number already exists
   const { data: existingCustomer, error: searchError } = await supabaseAdmin
     .from("customers")
@@ -36,7 +39,7 @@ export async function createCustomer(data: { name: string; mobile: string; type:
     .eq("mobile", mobile)
     .single();
 
-  if (searchError && searchError.code !== "PGRST116") { // PGRST116 means no rows found
+  if (searchError && searchError.code !== "PGRST116") {
     throw searchError;
   }
   if (existingCustomer) {
@@ -58,6 +61,8 @@ export async function createCustomer(data: { name: string; mobile: string; type:
  */
 export async function updateCustomer(id: string, updateData: { name?: string; mobile?: string; type?: string; site_name?: string }) {
   if (!id) throw new Error("Customer id is required");
+
+  const supabaseAdmin = getSupabaseAdmin();
 
   if (updateData.mobile) {
     const { data: existingCustomer, error: searchError } = await supabaseAdmin
@@ -92,6 +97,7 @@ export async function updateCustomer(id: string, updateData: { name?: string; mo
 export async function deleteCustomer(id: string) {
   if (!id) throw new Error("Customer id is required");
 
+  const supabaseAdmin = getSupabaseAdmin();
   const { error } = await supabaseAdmin
     .from("customers")
     .delete()

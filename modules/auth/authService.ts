@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabaseClient";
-import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 
 /**
  * Register a new user and create their profile via DB trigger.
@@ -11,6 +11,7 @@ export async function registerUser(form: any) {
   const mobile = form.mobile?.trim();
   const role = form.role;
 
+  const supabaseAdmin = getSupabaseAdmin();
   const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
     email,
     password,
@@ -46,6 +47,7 @@ export async function adminCreateUser(form: any) {
     throw new Error("email, password, name and mobile are required");
   }
 
+  const supabaseAdmin = getSupabaseAdmin();
   const { data: userData, error: authError } = await supabaseAdmin.auth.admin.createUser({
     email,
     password,
@@ -69,6 +71,7 @@ export async function updateUser(id: string, updateData: any) {
       ? profileFields.email.trim().toLowerCase()
       : undefined;
 
+  const supabaseAdmin = getSupabaseAdmin();
   const { data: existingProfile, error: existingProfileError } = await supabaseAdmin
     .from("profiles")
     .select("name,email,mobile,role,status")
@@ -122,6 +125,7 @@ export async function updateUser(id: string, updateData: any) {
  * Delete a user from both Auth and Profiles.
  */
 export async function deleteUser(id: string) {
+  const supabaseAdmin = getSupabaseAdmin();
   // Profiles table has CASCADE delete via FK, so deleting from Auth is enough.
   const { error } = await supabaseAdmin.auth.admin.deleteUser(id);
   if (error) throw error;
@@ -132,6 +136,7 @@ export async function deleteUser(id: string) {
  * Fetch all user profiles.
  */
 export async function getAllProfiles(search?: string) {
+  const supabaseAdmin = getSupabaseAdmin();
   let query = supabaseAdmin
     .from("profiles")
     .select("*")
@@ -161,6 +166,7 @@ export async function loginUser(email: string, password: string) {
   const userId = data.user?.id;
   if (!userId) return data;
 
+  const supabaseAdmin = getSupabaseAdmin();
   const { data: profile, error: profileError } = await supabaseAdmin
     .from("profiles")
     .select("*")

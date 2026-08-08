@@ -1,9 +1,10 @@
-import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 
 /**
  * Fetch all sites. Supports optional search query.
  */
 export async function getAllSites(search?: string) {
+  const supabaseAdmin = getSupabaseAdmin();
   let query = supabaseAdmin
     .from("sites")
     .select("*")
@@ -11,7 +12,7 @@ export async function getAllSites(search?: string) {
 
   if (search?.trim()) {
     const q = `%${search.trim()}%`;
-    query = query.ilike('name', q);
+    query = query.ilike("name", q);
   }
 
   const { data, error } = await query;
@@ -29,6 +30,7 @@ export async function createSite(data: { name: string }) {
     throw new Error("Site name is required");
   }
 
+  const supabaseAdmin = getSupabaseAdmin();
   const { data: siteData, error } = await supabaseAdmin
     .from("sites")
     .insert([{ name }])
@@ -45,6 +47,7 @@ export async function createSite(data: { name: string }) {
 export async function updateSite(id: string, updateData: { name?: string }) {
   if (!id) throw new Error("Site id is required");
 
+  const supabaseAdmin = getSupabaseAdmin();
   const { data, error } = await supabaseAdmin
     .from("sites")
     .update({ ...updateData, updated_at: new Date().toISOString() })
@@ -62,6 +65,7 @@ export async function updateSite(id: string, updateData: { name?: string }) {
 export async function deleteSite(id: string) {
   if (!id) throw new Error("Site id is required");
 
+  const supabaseAdmin = getSupabaseAdmin();
   const { error } = await supabaseAdmin
     .from("sites")
     .delete()
